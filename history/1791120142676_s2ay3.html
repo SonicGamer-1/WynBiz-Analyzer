@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1791120142676_s2ay3 - Conversation Export</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #09090b;
+      color: #fafafa;
+      line-height: 1.6;
+    }
+
+    html,
+    body,
+    .content pre,
+    .tool-content,
+    .line-content,
+    .dots-container {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar,
+    .content pre::-webkit-scrollbar,
+    .tool-content::-webkit-scrollbar,
+    .line-content::-webkit-scrollbar,
+    .dots-container::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+    
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(9, 9, 11, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #27272a;
+      padding: 1rem 1.5rem;
+    }
+    
+    .header-content {
+      max-width: 56rem;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .stats {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: #a1a1aa;
+    }
+    
+    .stat svg {
+      width: 1rem;
+      height: 1rem;
+    }
+    
+    .messages {
+      max-width: 56rem;
+      margin: 0 auto;
+    }
+    
+    .message {
+      padding: 1.5rem;
+      border-bottom: 1px solid #18181b;
+    }
+    
+    .message.user {
+      background: rgba(39, 39, 42, 0.3);
+    }
+    
+    .message-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .avatar {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .avatar.user {
+      background: #3b82f6;
+      color: white;
+    }
+    
+    .avatar.assistant {
+      background: #27272a;
+      color: #a1a1aa;
+    }
+    
+    .role {
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+    
+    .model {
+      font-size: 0.75rem;
+      color: #71717a;
+      font-family: ui-monospace, monospace;
+    }
+    
+    .content {
+      padding-left: 2.75rem;
+    }
+    
+    .content p {
+      margin-bottom: 0.5rem;
+    }
+    
+    .content pre {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: ui-monospace, monospace;
+      font-size: 0.875rem;
+      margin: 0.75rem 0;
+    }
+    
+    .content code {
+      font-family: ui-monospace, monospace;
+      background: #27272a;
+      padding: 0.125rem 0.25rem;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+    }
+    
+    .content pre code {
+      background: transparent;
+      padding: 0;
+    }
+    
+    .tool-block {
+      margin: 0.75rem 0;
+      border: 1px solid #27272a;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    
+    .tool-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: #18181b;
+      font-family: ui-monospace, monospace;
+      font-size: 0.875rem;
+    }
+    
+    .tool-header svg {
+      width: 1rem;
+      height: 1rem;
+      color: #71717a;
+    }
+    
+    .tool-content {
+      padding: 1rem;
+      font-family: ui-monospace, monospace;
+      font-size: 0.75rem;
+      background: #09090b;
+      white-space: pre-wrap;
+      word-break: break-all;
+      overflow: auto;
+    }
+    
+    .diff-block {
+      margin: 0.75rem 0;
+      border: 1px solid #27272a;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: #09090b;
+    }
+    
+    .diff-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      background: #18181b;
+      border-bottom: 1px solid #27272a;
+      font-family: ui-monospace, monospace;
+      font-size: 0.875rem;
+    }
+    
+    .diff-header svg {
+      width: 1rem;
+      height: 1rem;
+      color: #71717a;
+    }
+    
+    .diff-stats {
+      margin-left: auto;
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+    }
+    
+    .diff-stats .added {
+      color: #4ade80;
+    }
+    
+    .diff-stats .removed {
+      color: #f87171;
+    }
+    
+    .diff-content {
+      font-family: ui-monospace, monospace;
+      font-size: 0.75rem;
+    }
+    
+    .diff-line {
+      display: flex;
+      border-bottom: 1px solid #18181b;
+    }
+    
+    .diff-line:last-child {
+      border-bottom: none;
+    }
+    
+    .diff-line.added {
+      background: rgba(74, 222, 128, 0.1);
+    }
+    
+    .diff-line.removed {
+      background: rgba(248, 113, 113, 0.1);
+    }
+    
+    .line-num {
+      width: 3rem;
+      padding: 0.125rem 0.5rem;
+      text-align: right;
+      color: #52525b;
+      border-right: 1px solid #27272a;
+      user-select: none;
+      flex-shrink: 0;
+    }
+    
+    .line-indicator {
+      width: 1.5rem;
+      padding: 0.125rem 0.25rem;
+      text-align: center;
+      user-select: none;
+      flex-shrink: 0;
+    }
+    
+    .line-indicator.added {
+      color: #4ade80;
+      font-weight: bold;
+    }
+    
+    .line-indicator.removed {
+      color: #f87171;
+      font-weight: bold;
+    }
+    
+    .line-content {
+      padding: 0.125rem 0.75rem;
+      white-space: pre;
+      overflow-x: auto;
+      flex: 1;
+    }
+    
+    .line-content.added {
+      color: #86efac;
+    }
+    
+    .line-content.removed {
+      color: #fca5a5;
+    }
+    
+    .badge {
+      font-size: 0.625rem;
+      padding: 0.125rem 0.375rem;
+      border-radius: 0.25rem;
+      background: #27272a;
+      color: #71717a;
+    }
+    
+    .badge.new-file {
+      background: rgba(74, 222, 128, 0.2);
+      color: #4ade80;
+    }
+    
+    .error {
+      color: #f87171;
+    }
+    
+    .success {
+      color: #4ade80;
+    }
+    
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin: 0.5rem 0;
+    }
+    
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.75rem;
+      background: #18181b;
+      border-radius: 0.375rem;
+      font-family: ui-monospace, monospace;
+      font-size: 0.75rem;
+      color: #a1a1aa;
+    }
+    
+    .command-block {
+      margin: 0.5rem 0;
+      padding: 0.75rem 1rem;
+      background: #18181b;
+      border-radius: 0.5rem;
+      font-family: ui-monospace, monospace;
+      font-size: 0.75rem;
+    }
+    
+    .command-label {
+      font-size: 0.625rem;
+      color: #71717a;
+      margin-bottom: 0.25rem;
+    }
+    
+    .dots-nav {
+      position: fixed;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .dots-nav-btn {
+      padding: 0.375rem;
+      border-radius: 0.5rem;
+      background: #27272a;
+      border: 1px solid #3f3f46;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .dots-nav-btn:hover {
+      background: #3f3f46;
+    }
+    
+    .dots-nav-btn svg {
+      width: 0.75rem;
+      height: 0.75rem;
+      color: #a1a1aa;
+    }
+    
+    .dots-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background: #27272a;
+      border: 1px solid #3f3f46;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    
+    .dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    
+    .dot.user {
+      background: rgba(59, 130, 246, 0.4);
+    }
+    
+    .dot.user:hover {
+      background: rgba(59, 130, 246, 0.6);
+    }
+    
+    .dot.assistant {
+      background: rgba(161, 161, 170, 0.4);
+    }
+    
+    .dot.assistant:hover {
+      background: rgba(161, 161, 170, 0.6);
+    }
+    
+    .dot.active {
+      background: #3b82f6;
+      transform: scale(1.25);
+    }
+    
+    @media (max-width: 1024px) {
+      .dots-nav {
+        display: none;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .stats {
+        gap: 1rem;
+      }
+      
+      .content {
+        padding-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div class="stats">
+        <div class="stat">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+          <span>25 messages</span>
+        </div>
+        
+        
+        <div class="stat">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/></svg>
+          <span>1,173,431 tokens</span>
+        </div>
+        
+        
+        <div class="stat">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>10/4/2026, 7:02:15 PM</span>
+        </div>
+        
+      </div>
+    </div>
+  </header>
+  
+  <div class="messages">
+    
+    <div class="message user">
+      <div class="message-header">
+        <div class="avatar user">
+          U
+        </div>
+        <span class="role">User</span>
+        
+      </div>
+      <div class="content">
+        <div>polish this project, dont change code</div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="message-header">
+        <div class="avatar assistant">
+          A
+        </div>
+        <span class="role">Assistant</span>
+        <span class="model">cline-pass/deepseek-v4-pro</span>
+      </div>
+      <div class="content">
+        
+<div>I&#039;ll start by exploring the project to understand its structure and current state, then figure out what &quot;polishing&quot; without changing code means for this repo.</div>
+
+    <div class="command-block">
+      <div class="command-label">Command 1</div>
+      <code>cd &#039;c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer&#039;; Get-ChildItem -Force | Select-Object Mode, Length, Name</code>
+    </div>
+  
+
+    <div class="command-block">
+      <div class="command-label">Command 2</div>
+      <code>cd &#039;c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer&#039;; git status --short; git log --oneline -10</code>
+    </div>
+  
+
+    <div class="tool-block">
+      <div class="tool-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>search_codebase</span>
+        <span class="success">Success</span>
+      </div>
+      <div class="tool-content">{
+  &quot;queries&quot;: [
+    &quot;README&quot;,
+    &quot;LICENSE&quot;,
+    &quot;package\\.json&quot;,
+    &quot;\\.gitignore&quot;
+  ]
+}</div>
+    </div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+
+    <div class="command-block">
+      <div class="command-label">Command 1</div>
+      <code>cd &#039;c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer&#039;; Get-ChildItem -Force -Recurse -Depth 2 game-qa-swarm | Select-Object Mode, Length, FullName</code>
+    </div>
+  
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+
+    <div class="command-block">
+      <div class="command-label">Command 1</div>
+      <code>cd &#039;c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer&#039;; Get-ChildItem -Recurse -File game-qa-swarm | ForEach-Object { $_.FullName.Replace((Get-Location).Path + &#039;\&#039;, &#039;&#039;) } | Sort-Object</code>
+    </div>
+  
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+
+    <div class="command-block">
+      <div class="command-label">Command 1</div>
+      <code>cd &#039;c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm&#039;; Get-ChildItem -Force | Select-Object Mode, Length, Name; echo &#039;---GIT TRACKED FILES---&#039;; git ls-files</code>
+    </div>
+  
+
+    <div class="tool-block">
+      <div class="tool-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>read_files</span>
+        <span class="success">Success</span>
+      </div>
+      <div class="tool-content">{
+  &quot;files&quot;: [
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\README.md&quot;
+    },
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\requirements.txt&quot;
+    },
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\.gitignore&quot;
+    },
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\.env.example&quot;
+    }
+  ]
+}</div>
+    </div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+
+    <div class="command-block">
+      <div class="command-label">Command 1</div>
+      <code>cd &#039;c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer&#039;; git status; echo &#039;---BRANCHES---&#039;; git branch -a; echo &#039;---REMOTE---&#039;; git remote -v</code>
+    </div>
+  
+
+    <div class="tool-block">
+      <div class="tool-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>read_files</span>
+        <span class="success">Success</span>
+      </div>
+      <div class="tool-content">{
+  &quot;files&quot;: [
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\README.md&quot;,
+      &quot;start_line&quot;: 88,
+      &quot;end_line&quot;: 240
+    },
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\gameqa\\__init__.py&quot;
+    },
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\dashboard\\app.py&quot;
+    }
+  ]
+}</div>
+    </div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+
+    <div class="tool-block">
+      <div class="tool-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>read_files</span>
+        <span class="success">Success</span>
+      </div>
+      <div class="tool-content">{
+  &quot;files&quot;: [
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\README.md&quot;,
+      &quot;start_line&quot;: 159,
+      &quot;end_line&quot;: 175
+    }
+  ]
+}</div>
+    </div>
+
+    <div class="tool-block">
+      <div class="tool-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>search_codebase</span>
+        <span class="success">Success</span>
+      </div>
+      <div class="tool-content">{
+  &quot;queries&quot;: [
+    &quot;DeepSeek&quot;,
+    &quot;Claude&quot;,
+    &quot;cline&quot;,
+    &quot;CLINE&quot;,
+    &quot;anthropic&quot;,
+    &quot;ANTHROPIC&quot;,
+    &quot;xiaomi&quot;,
+    &quot;mimo&quot;,
+    &quot;sk_[A-Za-z0-9]{20}&quot;
+  ]
+}</div>
+    </div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+
+    <div class="tool-block">
+      <div class="tool-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>read_files</span>
+        <span class="success">Success</span>
+      </div>
+      <div class="tool-content">{
+  &quot;files&quot;: [
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\gameqa\\game\\maps.py&quot;
+    },
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\dashboard\\chat.py&quot;,
+      &quot;start_line&quot;: 1,
+      &quot;end_line&quot;: 20
+    }
+  ]
+}</div>
+    </div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+<div>I&#039;ve explored the project thoroughly. Here&#039;s what I found and my proposed plan. Note: I&#039;m in <strong>Plan mode</strong>, so nothing below has been changed yet — I&#039;m just aligning with you first.<br><br>## What the project is<br><br><code>WynBiz-Analyzer</code> is a git repo whose entire contents live in <code>game-qa-swarm/</code> — an AI game-QA swarm (<code>gameqa</code> package) that plays a deterministic grid game, finds 4 planted bugs with rule-based detectors, writes machine-verified repros, and triages/fixes them. It has a CLI, a Streamlit dashboard (with an arcade, chatbot, and file analyzer), tests, and an already-pretty-thorough <code>README.md</code>.<br><br>## What I found that needs polishing<br><br><strong>1. 🔴 CRITICAL — a real API key is committed (security leak)</strong><br>- <code>game-qa-swarm/.env.example</code> line 8 contains a live key: <code>CLINE_API_KEY=sk_2507...</code><br>- This file is tracked by git, so the secret is now in your GitHub history (public repo <code>SonicGamer-1/WynBiz-Analyzer</code>).<br>- <code>game-qa-swarm/.env</code> also holds the real key on disk (gitignored, untracked — fine, but same key).<br><br><strong>2. Repo landing page is bare</strong><br>- Root <code>WynBiz-Analyzer/</code> has <strong>no <code>README.md</code> and no <code>LICENSE</code></strong>. GitHub shows an empty page; the only doc is nested at <code>game-qa-swarm/README.md</code>.<br><br><strong>3. README is out of date vs. the code</strong><br>- &quot;Design notes&quot; still says <strong>&quot;One map, one level … <code>MAP_RAW</code> is a single 12x10 level&quot;</strong>, but <code>maps.py</code> now defines a 3-level <strong>campaign</strong> (<code>level_01/02/03</code> with themes, difficulty, enemy paths).<br>- Repo-layout section lists only <code>dashboard/app.py</code>, omitting <code>arcade.py</code>, <code>chat.py</code>, <code>file_analyzer.py</code>.<br><br><strong>4. Inconsistent AI-provider naming (three names in one project)</strong><br>- README/requirements/triage.py → <strong>&quot;Claude&quot;</strong> / Anthropic<br>- actual runtime path + <code>.env.example</code> → <strong>Cline API</strong> (<code>api.cline.bot</code>, model <code>xiaomi/mimo-v2.6-flash</code>)<br>- dashboard UI strings (<code>app.py</code>, <code>chat.py</code>, <code>file_analyzer.py</code>) → <strong>&quot;DeepSeek V4.1 Flash&quot;</strong> (stale/wrong)<br>- The real engine is Cline&#039;s OpenAI-compatible endpoint; Anthropic is a fallback; &quot;DeepSeek&quot; appears only in UI labels.<br><br>## Proposed polish plan (no logic/behavior changes)<br><br>1. <strong>Fix the leak</strong> — replace the key in <code>.env.example</code> with a placeholder (<code>CLINE_API_KEY=your_cline_api_key_here</code>). *(Then you should rotate/revoke the exposed key on the Cline side, since it&#039;s already public.)*<br>2. <strong>Add root <code>README.md</code></strong> — short overview + quick-start pointing into <code>game-qa-swarm/</code>.<br>3. <strong>Add <code>LICENSE</code></strong> — I&#039;ll default to <strong>MIT</strong> unless you prefer otherwise.<br>4. <strong>Correct <code>game-qa-swarm/README.md</code></strong> — campaign levels, dashboard submodules, and unify the &quot;Claude/Cline&quot; wording (docs only, no code).<br>5. <strong>Optional</strong> — align the stale &quot;DeepSeek V4.1 Flash&quot; UI strings in the dashboard with the real engine (this *is* a small string-only code change, so I need your OK given &quot;don&#039;t change code&quot;).<br><br>One decision drives the rest, so let me confirm scope:</div>
+
+    <div class="tool-block">
+      <div class="tool-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>ask_question</span>
+        <span class="success">Success</span>
+      </div>
+      <div class="tool-content">{
+  &quot;question&quot;: &quot;How wide should the \&quot;polish\&quot; go, given you said don&#039;t change code?&quot;,
+  &quot;options&quot;: [
+    &quot;Docs &amp; hygiene only: fix the leaked key placeholder, add root README + LICENSE, correct README drift — zero code edits&quot;,
+    &quot;Also fix the stale &#039;DeepSeek V4.1 Flash&#039; UI strings (small string-only edits to dashboard files)&quot;,
+    &quot;Docs &amp; hygiene + UI strings, and also restructure: promote game-qa-swarm/ to the repo root&quot;,
+    &quot;Just fix the leaked key — the security issue only&quot;
+  ]
+}</div>
+    </div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+
+    <div class="tool-block">
+      <div class="tool-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>search_codebase</span>
+        <span class="success">Success</span>
+      </div>
+      <div class="tool-content">{
+  &quot;queries&quot;: [
+    &quot;episodes_per_bot|episodes&quot;,
+    &quot;def run_swarm&quot;,
+    &quot;--episodes&quot;
+  ]
+}</div>
+    </div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+<div>Confirmed — <code>--episodes 20</code> means <strong>20 per bot type × 3 bots = 60 total</strong>, so that&#039;s another small doc inconsistency I&#039;ll clarify. I now have everything I need.<br><br>## Final plan (docs &amp; hygiene only — zero code/logic edits)<br><br>### 1. Fix the leaked API key — <code>game-qa-swarm/.env.example</code><br>- Replace <code>CLINE_API_KEY=sk_2507...</code> with <code>CLINE_API_KEY=your_cline_api_key_here</code>.<br>- ⚠️ You should also <strong>rotate/revoke that key</strong> on the Cline side — it&#039;s already in the public GitHub history, so editing the file doesn&#039;t un-expose it.<br><br>### 2. Add <code>LICENSE</code> (repo root)<br>- Add an <strong>MIT</strong> license (I&#039;ll default to MIT; tell me if you want a different one). Copyright holder — I&#039;ll use &quot;SonicGamer-1&quot; from the remote unless you say otherwise.<br><br>### 3. Add root <code>README.md</code> (<code>WynBiz-Analyzer</code> repo root)<br>- Short project overview, a &quot;what is this&quot; blurb, quick-start, and a link to the detailed <code>game-qa-swarm/README.md</code>. Fixes the currently-bare GitHub landing page.<br><br>### 4. Correct <code>game-qa-swarm/README.md</code> drift + text inconsistencies<br>- <strong>Campaign levels</strong>: replace the &quot;One map, one level&quot; design note with the truth — a 3-level campaign (<code>level_01</code> Forgotten Crypt / <code>level_02</code> Inferno Bastion / <code>level_03</code> Cyber Void Citadel), each with theme, difficulty, par steps, enemy paths.<br>- <strong>Repo layout</strong>: add the missing <code>dashboard/</code> modules (<code>arcade.py</code>, <code>chat.py</code>, <code>file_analyzer.py</code>).<br>- <strong>Unify the triage naming</strong>: change the stale &quot;Claude triage&quot; wording to <strong>Cline</strong> (the actual shipped API path, <code>api.cline.bot</code>, model <code>xiaomi/mimo-v2.6-flash</code>), while keeping &quot;Anthropic SDK&quot; named only as the optional fallback. This affects the intro, the ASCII diagram, repo-layout/artifacts/CLI/demo/design-note lines.<br>- <strong><code>--episodes</code> wording</strong>: clarify &quot;60 episodes&quot; → &quot;20 episodes per bot type (60 total)&quot;.<br>- <strong><code>requirements.txt</code></strong>: update the <code># Claude triage</code> comment to <code># Cline triage</code>.<br><br>### 5. Deliberately left alone (flagged, not touched — they&#039;re code)<br>- The stale <strong>&quot;DeepSeek V4.1 Flash&quot;</strong> UI strings in <code>dashboard/app.py</code>, <code>dashboard/chat.py</code>, <code>dashboard/file_analyzer.py</code>, and the &quot;Claude&quot; docstring/default in <code>gameqa/reports/triage.py</code>. These contradict the real engine but live in <code>.py</code> files, so per &quot;zero code edits&quot; I&#039;ll leave them and note them as a future cleanup.<br><br>---<br><br>That&#039;s the plan. I&#039;m in Plan mode and can&#039;t make these changes myself — <strong>please toggle to Act mode</strong> and I&#039;ll implement exactly the above. One quick confirmation while you&#039;re switching: is <strong>MIT</strong> the right license, and should the copyright line read <strong>&quot;SonicGamer-1&quot;</strong>?</div>
+      </div>
+    </div>
+
+    <div class="message user">
+      <div class="message-header">
+        <div class="avatar user">
+          U
+        </div>
+        <span class="role">User</span>
+        
+      </div>
+      <div class="content">
+        <div>also fix some text inconsistencies, like different ai agents mentioned while different are used</div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="message-header">
+        <div class="avatar assistant">
+          A
+        </div>
+        <span class="role">Assistant</span>
+        <span class="model">cline-pass/deepseek-v4-pro</span>
+      </div>
+      <div class="content">
+        
+<div>Good addition — that&#039;s exactly the kind of inconsistency I flagged. Let me pin down the precise locations and the &quot;correct&quot; naming so the plan is concrete.</div>
+
+    <div class="tool-block">
+      <div class="tool-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>read_files</span>
+        <span class="success">Success</span>
+      </div>
+      <div class="tool-content">{
+  &quot;files&quot;: [
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\dashboard\\file_analyzer.py&quot;,
+      &quot;start_line&quot;: 1,
+      &quot;end_line&quot;: 60
+    },
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\dashboard\\chat.py&quot;,
+      &quot;start_line&quot;: 1,
+      &quot;end_line&quot;: 16
+    },
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\gameqa\\reports\\triage.py&quot;,
+      &quot;start_line&quot;: 1,
+      &quot;end_line&quot;: 55
+    },
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\dashboard\\app.py&quot;,
+      &quot;start_line&quot;: 770,
+      &quot;end_line&quot;: 790
+    }
+  ]
+}</div>
+    </div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+<div>I&#039;ve now pinned down every inconsistency. Here&#039;s the consolidated, final plan (still <strong>Plan mode</strong> — nothing changed yet).<br><br>## The AI-engine naming problem (what you pointed at)<br><br>The code actually uses <strong>Cline API</strong> (OpenAI-compatible at <code>api.cline.bot</code>, default model <code>xiaomi/mimo-v2.6-flash</code>), with <strong>Anthropic (Claude)</strong> only as an optional fallback. But the text mentions <strong>three</strong> different engines:<br><br>| Where | Says | Should say |<br>|---|---|---|<br>| <code>dashboard/app.py</code>, <code>chat.py</code>, <code>file_analyzer.py</code> | &quot;DeepSeek V4.1 Flash&quot; | <strong>Cline</strong> (no DeepSeek exists anywhere) |<br>| <code>README.md</code>, <code>requirements.txt</code>, <code>triage.py</code>, <code>app.py</code> | &quot;Claude&quot; | <strong>Cline</strong> (Claude is only the *fallback*) |<br>| <code>.env.example</code>, <code>triage.py</code> internals | &quot;Cline API&quot; | ✅ already correct |<br><br>## Final change list<br><br>### A. Security<br>1. <code>game-qa-swarm/.env.example</code> — replace the leaked <code>sk_2507...</code> key with <code>your_cline_api_key_here</code>. *(Rotate the real key on Cline&#039;s side — it&#039;s already public.)*<br><br>### B. Repo landing (new files)<br>2. Root <code>README.md</code> — short overview + quick-start linking into <code>game-qa-swarm/</code>.<br>3. Root <code>LICENSE</code> — <strong>MIT</strong>, copyright &quot;SonicGamer-1&quot; (tell me if you want different).<br><br>### C. AI-engine naming unification (string/docstring-only edits — no logic/behavior changes)<br>4. <code>dashboard/app.py</code> → &quot;DeepSeek / Claude AI Triage&quot; → <strong>&quot;Cline AI Triage&quot;</strong>; two &quot;Querying DeepSeek V4.1 Flash…&quot; → <strong>&quot;Querying Cline AI…&quot;</strong>; docstring &quot;Claude triage&quot; → <strong>&quot;Cline triage&quot;</strong>.<br>5. <code>dashboard/chat.py</code> → &quot;Powered by DeepSeek V4.1 Flash via Cline API&quot; → <strong>&quot;Powered by Cline API&quot;</strong>; two &quot;…with DeepSeek V4.1 Flash…&quot; → <strong>&quot;…with Cline AI…&quot;</strong>.<br>6. <code>dashboard/file_analyzer.py</code> → two &quot;DeepSeek V4.1 Flash&quot; → <strong>&quot;Cline AI&quot;</strong>.<br>7. <code>gameqa/reports/triage.py</code> → docstring &quot;ask Claude&quot; → <strong>&quot;ask Cline&quot;</strong>. *(Leave <code>claude-3-5-sonnet-latest</code> — it&#039;s the real Anthropic fallback model string.)*<br><br>### D. README / requirements corrections<br>8. <code>game-qa-swarm/README.md</code> — unify &quot;Claude&quot;→&quot;Cline&quot; throughout (intro, diagram, repo layout, artifacts, CLI table, demo script, design notes); clarify &quot;60 episodes&quot;→&quot;20 per bot × 3 bots&quot;; update &quot;One map, one level&quot;→3-level campaign; add missing <code>dashboard/</code> modules.<br>9. <code>requirements.txt</code> — &quot;# Claude triage&quot; → &quot;# Cline triage&quot;.<br><br>### Left alone (correct as-is)<br>- <code>triage.py</code> <code>claude-3-5-sonnet-latest</code>, <code>ANTHROPIC_API_KEY</code>, the <code>anthropic</code> import/SDK — genuine fallback, stays.<br>- Generated <code>artifacts/<strong></code> — already record <code>cline:xiaomi/mimo-v2.6-flash</code> and are gitignored anyway.<br><br>---<br><br>Everything above is docs, templates, and string/docstring labels — no runtime logic changes. </strong>Please toggle to Act mode** and I&#039;ll implement it. (If MIT + &quot;SonicGamer-1&quot; aren&#039;t right, tell me when you switch.)</div>
+      </div>
+    </div>
+
+    <div class="message user">
+      <div class="message-header">
+        <div class="avatar user">
+          U
+        </div>
+        <span class="role">User</span>
+        
+      </div>
+      <div class="content">
+        <div>The user approved switching to act mode. Continue with the approved plan now.</div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="message-header">
+        <div class="avatar assistant">
+          A
+        </div>
+        <span class="role">Assistant</span>
+        <span class="model">cline-pass/deepseek-v4-pro</span>
+      </div>
+      <div class="content">
+        
+<div>I&#039;m now in Act mode. Let me gather the exact current text for each file I&#039;ll edit, so my replacements are precise.</div>
+
+    <div class="tool-block">
+      <div class="tool-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>read_files</span>
+        <span class="success">Success</span>
+      </div>
+      <div class="tool-content">{
+  &quot;files&quot;: [
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\README.md&quot;
+    },
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\dashboard\\chat.py&quot;,
+      &quot;start_line&quot;: 218,
+      &quot;end_line&quot;: 245
+    },
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\dashboard\\app.py&quot;,
+      &quot;start_line&quot;: 1,
+      &quot;end_line&quot;: 14
+    }
+  ]
+}</div>
+    </div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+
+    <div class="tool-block">
+      <div class="tool-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>read_files</span>
+        <span class="success">Success</span>
+      </div>
+      <div class="tool-content">{
+  &quot;files&quot;: [
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\README.md&quot;,
+      &quot;start_line&quot;: 120,
+      &quot;end_line&quot;: 162
+    }
+  ]
+}</div>
+    </div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+<div>All context gathered. Now I&#039;ll implement every change — the leaked key, the root README/LICENSE, the AI-engine naming unification (Claude/DeepSeek → Cline), and the README drift corrections.</div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\.env.example</span>
+        <span class="badge">example</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">CLINE_API_KEY=sk_2507c67ed7df0bd23cd9db28cb82a1c9daf9794be1a5b25c440c3865688e7291</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">CLINE_API_KEY=your_cline_api_key_here</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\requirements.txt</span>
+        <span class="badge">txt</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed"># Claude triage. Without a key (or without this package) triage falls back to</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"># Cline triage. Without a key (or without this package) triage falls back to</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\gameqa\reports\triage.py</span>
+        <span class="badge">py</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">&quot;&quot;&quot;LLM triage: ask Claude for a title, severity and suspected cause.</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">&quot;&quot;&quot;LLM triage: ask Cline for a title, severity and suspected cause.</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\dashboard\app.py</span>
+        <span class="badge">py</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">  3. One bug&#039;s detail: repro actions, Claude triage, replay GIF and a</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">  3. One bug&#039;s detail: repro actions, Cline triage, replay GIF and a</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\dashboard\app.py</span>
+        <span class="badge">py</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">        st.markdown(&quot;##### 🤖 DeepSeek / Claude AI Triage&quot;)</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">        st.markdown(&quot;##### 🤖 Cline AI Triage&quot;)</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\dashboard\app.py</span>
+        <span class="badge">py</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">                        st.write(&quot;🤖 Querying DeepSeek V4.1 Flash AI API for live triage...&quot;)</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">                        st.write(&quot;🤖 Querying Cline AI API for live triage...&quot;)</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\dashboard\app.py</span>
+        <span class="badge">py</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">                    with st.spinner(&quot;Querying DeepSeek V4.1 Flash AI API for live root cause triage...&quot;):</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">                    with st.spinner(&quot;Querying Cline AI API for live root cause triage...&quot;):</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\dashboard\chat.py</span>
+        <span class="badge">py</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">Powered by DeepSeek V4.1 Flash via Cline API.</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">Powered by Cline AI API.</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\dashboard\chat.py</span>
+        <span class="badge">py</span>
+        
+        <div class="diff-stats">
+          <span class="added">+6</span>
+          <span class="removed">-6</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">    if prompt_to_send:</div>
+        </div>
+        <div class="diff-line removed">
+          <div class="line-num">2</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">        st.session_state[&quot;chat_messages&quot;].append({&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt_to_send})</div>
+        </div>
+        <div class="diff-line removed">
+          <div class="line-num">3</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">        with st.chat_message(&quot;user&quot;):</div>
+        </div>
+        <div class="diff-line removed">
+          <div class="line-num">4</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">            st.markdown(prompt_to_send)</div>
+        </div>
+        <div class="diff-line removed">
+          <div class="line-num">5</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">        with st.chat_message(&quot;assistant&quot;, avatar=&quot;🤖&quot;):</div>
+        </div>
+        <div class="diff-line removed">
+          <div class="line-num">6</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">            with st.spinner(&quot;SwarmAI is analyzing query with DeepSeek V4.1 Flash...&quot;):</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">    if prompt_to_send:</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">2</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">        st.session_state[&quot;chat_messages&quot;].append({&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt_to_send})</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">3</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">        with st.chat_message(&quot;user&quot;):</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">4</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">            st.markdown(prompt_to_send)</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">5</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">        with st.chat_message(&quot;assistant&quot;, avatar=&quot;🤖&quot;):</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">6</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">            with st.spinner(&quot;SwarmAI is analyzing query with Cline AI...&quot;):</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\dashboard\chat.py</span>
+        <span class="badge">py</span>
+        
+        <div class="diff-stats">
+          <span class="added">+6</span>
+          <span class="removed">-6</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">    if user_input:</div>
+        </div>
+        <div class="diff-line removed">
+          <div class="line-num">2</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">        st.session_state[&quot;chat_messages&quot;].append({&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: user_input})</div>
+        </div>
+        <div class="diff-line removed">
+          <div class="line-num">3</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">        with st.chat_message(&quot;user&quot;):</div>
+        </div>
+        <div class="diff-line removed">
+          <div class="line-num">4</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">            st.markdown(user_input)</div>
+        </div>
+        <div class="diff-line removed">
+          <div class="line-num">5</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">        with st.chat_message(&quot;assistant&quot;, avatar=&quot;🤖&quot;):</div>
+        </div>
+        <div class="diff-line removed">
+          <div class="line-num">6</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">            with st.spinner(&quot;SwarmAI is analyzing query with DeepSeek V4.1 Flash...&quot;):</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">    if user_input:</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">2</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">        st.session_state[&quot;chat_messages&quot;].append({&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: user_input})</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">3</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">        with st.chat_message(&quot;user&quot;):</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">4</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">            st.markdown(user_input)</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">5</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">        with st.chat_message(&quot;assistant&quot;, avatar=&quot;🤖&quot;):</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">6</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">            with st.spinner(&quot;SwarmAI is analyzing query with Cline AI...&quot;):</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\dashboard\file_analyzer.py</span>
+        <span class="badge">py</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">DeepSeek V4.1 Flash, and returns a structured vulnerability report</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">Cline AI, and returns a structured vulnerability report</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\dashboard\file_analyzer.py</span>
+        <span class="badge">py</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">    &quot;&quot;&quot;Send game source code to DeepSeek V4.1 Flash for comprehensive bug analysis.&quot;&quot;&quot;</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">    &quot;&quot;&quot;Send game source code to Cline AI for comprehensive bug analysis.&quot;&quot;&quot;</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\README.md</span>
+        <span class="badge">md</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">reproducible bug reports, triages them with Claude, and then proves a fix</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">reproducible bug reports, triages them with Cline, and then proves a fix</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\README.md</span>
+        <span class="badge">md</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed"># 2. Let the swarm loose: 60 episodes, 3 bot types, 4 detectors</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"># 2. Let the swarm loose: 20 episodes per bot type (60 total), 3 bots, 4 detectors</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\README.md</span>
+        <span class="badge">md</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">│  + replay GIF  + Claude triage    │</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">│  + replay GIF  + Cline triage    │</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\README.md</span>
+        <span class="badge">md</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">│   │   └── triage.py        Claude triage, disk cache, heuristic fallback</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">│   │   └── triage.py        Cline triage, disk cache, heuristic fallback</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\README.md</span>
+        <span class="badge">md</span>
+        
+        <div class="diff-stats">
+          <span class="added">+2</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">├── dashboard/app.py</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">├── dashboard/</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">2</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">│   ├── app.py</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\README.md</span>
+        <span class="badge">md</span>
+        
+        <div class="diff-stats">
+          <span class="added">+5</span>
+          <span class="removed">-2</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">re-verify</div>
+        </div>
+        <div class="diff-line removed">
+          <div class="line-num">2</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">├── scripts/</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">re-verify</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">2</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">│   ├── arcade.py          playable Canvas arcade + bot spectator</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">3</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">│   ├── chat.py            SwarmAI chatbot over the bug store</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">4</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">│   └── file_analyzer.py   upload a .py game for an AI vulnerability report</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">5</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">├── scripts/</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\README.md</span>
+        <span class="badge">md</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">└── triage_cache/&lt;sig&gt;.json   Claude responses, so a network blip is invisible</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">└── triage_cache/&lt;sig&gt;.json   Cline responses, so a network blip is invisible</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\README.md</span>
+        <span class="badge">md</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">also runs Claude.</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">also runs Cline.</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\README.md</span>
+        <span class="badge">md</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">&quot;60 episodes across 3 bot types in a few seconds.</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">&quot;20 episodes per bot type (60 total) in a few seconds.</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\README.md</span>
+        <span class="badge">md</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">Claude&#039;s triage, and a replay GIF</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">Cline&#039;s triage, and a replay GIF</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\README.md</span>
+        <span class="badge">md</span>
+        
+        <div class="diff-stats">
+          <span class="added">+7</span>
+          <span class="removed">-3</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">**One map, one level.** `MAP_RAW` is a single 12x10 level. The detectors are</div>
+        </div>
+        <div class="diff-line removed">
+          <div class="line-num">2</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">map-agnostic (they read `MAP_RAW` and level constants), so a second level is a</div>
+        </div>
+        <div class="diff-line removed">
+          <div class="line-num">3</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">data change rather than a detector change — but that is untested.</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">**Three levels, one campaign.** `MAP_RAW` is the 12x10 `level_01` (&quot;The</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">2</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">Forgotten Crypt&quot;) that the swarm and detectors exercise. `maps.CAMPAIGN_LEVELS`</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">3</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">adds `level_02` (&quot;Inferno Bastion&quot;) and `level_03` (&quot;Cyber Void Citadel&quot;) for</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">4</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">the playable dashboard arcade, each with its own theme, difficulty, par step</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">5</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">count and enemy patrol paths. The detectors are map-agnostic (they read a</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">6</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">level&#039;s `raw` grid and constants), so a new level is a data change rather than</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">7</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">a detector change — but only `level_01` carries the planted bugs.</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm\README.md</span>
+        <span class="badge">md</span>
+        
+        <div class="diff-stats">
+          <span class="added">+1</span>
+          <span class="removed">-1</span>
+        </div>
+      </div>
+      <div class="diff-content">
+        
+        <div class="diff-line removed">
+          <div class="line-num">1</div>
+          <div class="line-indicator removed">-</div>
+          <div class="line-content removed">**Triage is advisory.** Claude&#039;s title, severity and suspected cause are</div>
+        </div>
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">**Triage is advisory.** Cline&#039;s title, severity and suspected cause are</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\README.md</span>
+        <span class="badge">md</span>
+        <span class="badge new-file">New File</span>
+        <div class="diff-stats">
+          <span class="added">+27</span>
+          
+        </div>
+      </div>
+      <div class="diff-content">
+        
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"># WynBiz-Analyzer</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">2</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">3</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">An AI agent swarm that plays a small grid game, finds real bugs, writes</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">4</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">reproducible bug reports, triages them with Cline, and then proves a fix</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">5</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">worked — without a human writing a single test case.</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">6</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">7</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">## What&#039;s in here</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">8</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">9</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">| Path | What it is |</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">10</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">|---|---|</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">11</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">| [`game-qa-swarm/`](game-qa-swarm/) | The **AI Game QA Swarm** — a headless, deterministic grid game with four planted bugs, three agent types, four rule-based detectors, a Streamlit dashboard (playable arcade, chatbot, file analyzer), and a fix-and-verify flow. See its [README](game-qa-swarm/README.md) for the full story. |</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">12</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">13</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">## Quick start</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">14</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">15</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">```bash</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">16</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">cd game-qa-swarm</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">17</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">pip install -r requirements.txt</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">18</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">19</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">python scripts/seed_bugs.py              # prove the 4 planted bugs reproduce</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">20</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">python -m gameqa.cli run --episodes 20   # let the swarm loose</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">21</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">streamlit run dashboard/app.py           # dashboard + playable arcade</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">22</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">```</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">23</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">24</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">## License</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">25</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">26</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">[MIT](LICENSE)</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">27</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      </div>
+    </div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\LICENSE</span>
+        <span class="badge">c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\LICENSE</span>
+        <span class="badge new-file">New File</span>
+        <div class="diff-stats">
+          <span class="added">+22</span>
+          
+        </div>
+      </div>
+      <div class="diff-content">
+        
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">MIT License</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">2</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">3</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">Copyright (c) 2026 SonicGamer-1</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">4</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">5</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">Permission is hereby granted, free of charge, to any person obtaining a copy</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">6</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">of this software and associated documentation files (the &quot;Software&quot;), to deal</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">7</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">in the Software without restriction, including without limitation the rights</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">8</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">9</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">copies of the Software, and to permit persons to whom the Software is</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">10</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">furnished to do so, subject to the following conditions:</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">11</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">12</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">The above copyright notice and this permission notice shall be included in all</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">13</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">copies or substantial portions of the Software.</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">14</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">15</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">16</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">17</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">18</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">19</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">20</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">21</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">SOFTWARE.</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">22</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      </div>
+    </div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+<div>All edits applied. Let me verify the results — confirm no stray &quot;DeepSeek&quot;/primary-&quot;Claude&quot; references remain and the README layout + new files look correct.</div>
+
+    <div class="tool-block">
+      <div class="tool-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>search_codebase</span>
+        <span class="success">Success</span>
+      </div>
+      <div class="tool-content">{
+  &quot;queries&quot;: [
+    &quot;DeepSeek&quot;,
+    &quot;Claude&quot;,
+    &quot;sk_2507&quot;
+  ]
+}</div>
+    </div>
+
+    <div class="tool-block">
+      <div class="tool-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>read_files</span>
+        <span class="success">Success</span>
+      </div>
+      <div class="tool-content">{
+  &quot;files&quot;: [
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\README.md&quot;,
+      &quot;start_line&quot;: 120,
+      &quot;end_line&quot;: 180
+    },
+    {
+      &quot;path&quot;: &quot;c:\\Users\\mcpeg\\OneDrive\\Documents\\Code\\WynBiz\\WynBiz-Analyzer\\game-qa-swarm\\.env.example&quot;
+    }
+  ]
+}</div>
+    </div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+<div>Verification looks clean. Let me validate the edited Python files still compile and the stdlib test suite still passes (the docstring/string edits shouldn&#039;t affect behavior, but I want to be sure).</div>
+
+    <div class="command-block">
+      <div class="command-label">Command 1</div>
+      <code>cd &#039;c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm&#039;; python -m py_compile dashboard/app.py dashboard/chat.py dashboard/file_analyzer.py gameqa/reports/triage.py; if ($LASTEXITCODE -eq 0) { echo &#039;PY_COMPILE_OK&#039; } else { echo &#039;PY_COMPILE_FAIL&#039; }</code>
+    </div>
+  
+
+    <div class="command-block">
+      <div class="command-label">Command 2</div>
+      <code>cd &#039;c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\game-qa-swarm&#039;; python tests/test_planted_bugs.py; echo &quot;planted_exit=$LASTEXITCODE&quot;; python tests/test_detectors.py; echo &quot;detectors_exit=$LASTEXITCODE&quot;</code>
+    </div>
+  
+
+    <div class="command-block">
+      <div class="command-label">Command 3</div>
+      <code>cd &#039;c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer&#039;; git status --short</code>
+    </div>
+  
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+<div>All tests pass (10/10 + 22/22) and the edited files compile. Let me just confirm the root <code>LICENSE</code> file is in place (git status only showed <code>README.md</code> as untracked).</div>
+
+    <div class="command-block">
+      <div class="command-label">Command 1</div>
+      <code>cd &#039;c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer&#039;; Get-ChildItem -Force -File | Select-Object Name, Length; echo &#039;---&#039;; git status --short</code>
+    </div>
+  
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+
+    <div class="command-block">
+      <div class="command-label">Command 1</div>
+      <code>cd &#039;c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer&#039;; Test-Path LICENSE; Test-Path README.md; Get-ChildItem -Force | Select-Object Name, Length, Mode</code>
+    </div>
+  
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+<div>The <code>LICENSE</code> file didn&#039;t actually persist (likely an OneDrive sync hiccup). Let me recreate it and verify immediately.</div>
+
+    <div class="diff-block">
+      <div class="diff-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+        <span>c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\LICENSE</span>
+        <span class="badge">c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer\LICENSE</span>
+        <span class="badge new-file">New File</span>
+        <div class="diff-stats">
+          <span class="added">+22</span>
+          
+        </div>
+      </div>
+      <div class="diff-content">
+        
+      <div class="diff-line added">
+        <div class="line-num">1</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">MIT License</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">2</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">3</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">Copyright (c) 2026 SonicGamer-1</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">4</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">5</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">Permission is hereby granted, free of charge, to any person obtaining a copy</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">6</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">of this software and associated documentation files (the &quot;Software&quot;), to deal</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">7</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">in the Software without restriction, including without limitation the rights</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">8</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">9</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">copies of the Software, and to permit persons to whom the Software is</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">10</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">furnished to do so, subject to the following conditions:</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">11</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">12</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">The above copyright notice and this permission notice shall be included in all</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">13</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">copies or substantial portions of the Software.</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">14</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">15</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">16</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">17</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">18</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">19</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">20</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">21</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added">SOFTWARE.</div>
+      </div>
+      <div class="diff-line added">
+        <div class="line-num">22</div>
+        <div class="line-indicator added">+</div>
+        <div class="line-content added"> </div>
+      </div>
+      </div>
+    </div>
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+    <div class="command-block">
+      <div class="command-label">Command 1</div>
+      <code>cd &#039;c:\Users\mcpeg\OneDrive\Documents\Code\WynBiz\WynBiz-Analyzer&#039;; Test-Path LICENSE; if (Test-Path LICENSE) { (Get-Item LICENSE).Length }; git status --short</code>
+    </div>
+  
+      </div>
+    </div>
+
+    <div class="message assistant">
+      <div class="content" style="padding-left: 2.75rem;">
+        
+<div>Done. Everything is applied and validated. Here&#039;s the summary.<br><br>## ✅ What changed (docs &amp; hygiene — no runtime logic touched)<br><br><strong>Security</strong><br>- <code>game-qa-swarm/.env.example</code> — replaced the leaked live key <code>sk_2507...</code> with <code>CLINE_API_KEY=your_cline_api_key_here</code>.<br>  - ⚠️ <strong>Action still needed on your end:</strong> that key is in the public GitHub history, so editing the file doesn&#039;t un-expose it. <strong>Rotate/revoke it</strong> on the Cline side.<br><br><strong>AI-engine naming unified → &quot;Cline&quot;</strong> (the actually-used engine; <code>claude-3-5-sonnet-latest</code> left only as the genuine Anthropic *fallback* model string)<br>- <code>dashboard/app.py</code>, <code>dashboard/chat.py</code>, <code>dashboard/file_analyzer.py</code> — removed all &quot;DeepSeek V4.1 Flash&quot; and &quot;Claude&quot; labels, replaced with &quot;Cline&quot;.<br>- <code>gameqa/reports/triage.py</code> docstring — &quot;ask Claude&quot; → &quot;ask Cline&quot;.<br>- <code>requirements.txt</code> comment — &quot;Claude triage&quot; → &quot;Cline triage&quot;.<br><br><strong>README corrections</strong><br>- <code>game-qa-swarm/README.md</code> — unified &quot;Claude&quot;→&quot;Cline&quot; (7 spots), clarified <code>--episodes 20</code> = &quot;20 per bot type (60 total)&quot;, replaced the stale &quot;One map, one level&quot; note with the real 3-level campaign description, and documented the missing <code>dashboard/</code> submodules (<code>arcade.py</code>, <code>chat.py</code>, <code>file_analyzer.py</code>).<br>- Root <code>README.md</code> — <strong>new</strong>, so the GitHub landing page isn&#039;t bare.<br>- Root <code>LICENSE</code> — <strong>new</strong>, MIT (copyright &quot;SonicGamer-1&quot; — tell me if you want a different name/year).<br><br>## ✅ Validation<br>- <code>python -m py_compile</code> on all 4 edited <code>.py</code> files → <strong>OK</strong><br>- <code>tests/test_planted_bugs.py</code> → <strong>10/10 passed</strong><br>- <code>tests/test_detectors.py</code> → <strong>22/22 passed</strong><br>- Search confirms <strong>0</strong> remaining &quot;DeepSeek&quot;, <strong>0</strong> remaining <code>sk_2507</code>, and the only &quot;Claude&quot; left is the intentional fallback model string.<br><br>## Files touched<br><pre><code>M  game-qa-swarm/.env.example<br>M  game-qa-swarm/requirements.txt<br>M  game-qa-swarm/README.md<br>M  game-qa-swarm/dashboard/app.py<br>M  game-qa-swarm/dashboard/chat.py<br>M  game-qa-swarm/dashboard/file_analyzer.py<br>M  game-qa-swarm/gameqa/reports/triage.py<br>?? README.md          (root)<br>?? LICENSE            (root)</code></pre><br><br>Nothing is committed — the changes are staged in your working tree for you to review (<code>git diff</code>). If you&#039;d like, I can also help draft the commit or scrub the key from git history (e.g., with <code>git filter-repo</code>), though rotating the key is the actual fix regardless.</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Dots Navigation Bar -->
+  <nav class="dots-nav">
+    <button class="dots-nav-btn" onclick="scrollToMessage(0)" title="Scroll to top">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+    </button>
+    <div class="dots-container">
+      
+        <div class="dot user" data-index="0" onclick="scrollToMessage(0)" title="Message 1: user"></div>
+      
+        <div class="dot assistant" data-index="1" onclick="scrollToMessage(1)" title="Message 2: assistant"></div>
+      
+        <div class="dot assistant" data-index="2" onclick="scrollToMessage(2)" title="Message 3: assistant"></div>
+      
+        <div class="dot assistant" data-index="3" onclick="scrollToMessage(3)" title="Message 4: assistant"></div>
+      
+        <div class="dot assistant" data-index="4" onclick="scrollToMessage(4)" title="Message 5: assistant"></div>
+      
+        <div class="dot assistant" data-index="5" onclick="scrollToMessage(5)" title="Message 6: assistant"></div>
+      
+        <div class="dot assistant" data-index="6" onclick="scrollToMessage(6)" title="Message 7: assistant"></div>
+      
+        <div class="dot assistant" data-index="7" onclick="scrollToMessage(7)" title="Message 8: assistant"></div>
+      
+        <div class="dot assistant" data-index="8" onclick="scrollToMessage(8)" title="Message 9: assistant"></div>
+      
+        <div class="dot assistant" data-index="9" onclick="scrollToMessage(9)" title="Message 10: assistant"></div>
+      
+        <div class="dot assistant" data-index="10" onclick="scrollToMessage(10)" title="Message 11: assistant"></div>
+      
+        <div class="dot user" data-index="11" onclick="scrollToMessage(11)" title="Message 12: user"></div>
+      
+        <div class="dot assistant" data-index="12" onclick="scrollToMessage(12)" title="Message 13: assistant"></div>
+      
+        <div class="dot assistant" data-index="13" onclick="scrollToMessage(13)" title="Message 14: assistant"></div>
+      
+        <div class="dot user" data-index="14" onclick="scrollToMessage(14)" title="Message 15: user"></div>
+      
+        <div class="dot assistant" data-index="15" onclick="scrollToMessage(15)" title="Message 16: assistant"></div>
+      
+        <div class="dot assistant" data-index="16" onclick="scrollToMessage(16)" title="Message 17: assistant"></div>
+      
+        <div class="dot assistant" data-index="17" onclick="scrollToMessage(17)" title="Message 18: assistant"></div>
+      
+        <div class="dot assistant" data-index="18" onclick="scrollToMessage(18)" title="Message 19: assistant"></div>
+      
+        <div class="dot assistant" data-index="19" onclick="scrollToMessage(19)" title="Message 20: assistant"></div>
+      
+        <div class="dot assistant" data-index="20" onclick="scrollToMessage(20)" title="Message 21: assistant"></div>
+      
+        <div class="dot assistant" data-index="21" onclick="scrollToMessage(21)" title="Message 22: assistant"></div>
+      
+        <div class="dot assistant" data-index="22" onclick="scrollToMessage(22)" title="Message 23: assistant"></div>
+      
+        <div class="dot assistant" data-index="23" onclick="scrollToMessage(23)" title="Message 24: assistant"></div>
+      
+        <div class="dot assistant" data-index="24" onclick="scrollToMessage(24)" title="Message 25: assistant"></div>
+      
+    </div>
+    <button class="dots-nav-btn" onclick="scrollToMessage(24)" title="Scroll to bottom">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+  </nav>
+  
+  <script>
+    let currentIndex = 0;
+    const messages = document.querySelectorAll('.message');
+    const dots = document.querySelectorAll('.dot');
+    
+    function scrollToMessage(index) {
+      if (index >= 0 && index < messages.length) {
+        messages[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        updateActiveDot(index);
+      }
+    }
+    
+    function updateActiveDot(index) {
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+      currentIndex = index;
+    }
+    
+    // Track scroll position to update active dot
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const index = Array.from(messages).indexOf(entry.target);
+          if (index !== -1) {
+            updateActiveDot(index);
+          }
+        }
+      });
+    }, { threshold: 0.5, rootMargin: '-80px 0px -50% 0px' });
+    
+    messages.forEach(msg => observer.observe(msg));
+    
+    // Initialize first dot as active
+    if (dots.length > 0) {
+      dots[0].classList.add('active');
+    }
+  </script>
+</body>
+</html>
