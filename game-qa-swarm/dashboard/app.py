@@ -5,7 +5,7 @@
 Three panes, in demo order:
   1. Run control + swarm summary (episodes, steps, wins, crashes, timing)
   2. Bug list with severity, occurrence count and verified-fixed state
-  3. One bug's detail: repro actions, Claude triage, replay GIF and a
+  3. One bug's detail: repro actions, Cline triage, replay GIF and a
      re-verify button
 
 Everything is read from artifacts/, which the CLI writes. The dashboard never
@@ -775,7 +775,7 @@ def detail_panel(report, store, settings):
 
     with right:
         triage = report.triage or {}
-        st.markdown("##### 🤖 DeepSeek / Claude AI Triage")
+        st.markdown("##### 🤖 Cline AI Triage")
         if triage:
             source = triage.get("source", "?")
             model = triage.get("model")
@@ -969,7 +969,7 @@ def main():
                         from gameqa.cli import _record_findings
                         _record_findings(store, swarm, make_gifs=has_pillow())
 
-                        st.write("🤖 Querying DeepSeek V4.1 Flash AI API for live triage...")
+                        st.write("🤖 Querying Cline AI API for live triage...")
                         triager = Triager(store, offline=settings["offline"])
                         for rep in store.all_reports():
                             triager.apply(rep, force=True)
@@ -981,7 +981,7 @@ def main():
             with qc2:
                 if st.button("🤖 Re-Triage All Bugs with AI API", use_container_width=True):
                     triager = Triager(store, offline=settings["offline"])
-                    with st.spinner("Querying DeepSeek V4.1 Flash AI API for live root cause triage..."):
+                    with st.spinner("Querying Cline AI API for live root cause triage..."):
                         for rep in store.all_reports():
                             triager.apply(rep, force=True)
                     st.cache_data.clear()

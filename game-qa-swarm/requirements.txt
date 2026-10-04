@@ -9,7 +9,7 @@ pillow>=10.0.0
 # Dashboard. `streamlit run dashboard/app.py`
 streamlit>=1.32.0
 
-# Claude triage. Without a key (or without this package) triage falls back to
+# Cline triage. Without a key (or without this package) triage falls back to
 # a deterministic heuristic, so the demo never stalls on the network.
 anthropic>=0.34.0
 

@@ -1,6 +1,6 @@
 """AI QA Assistant Chatbot Module for GameQA Swarm.
 
-Powered by DeepSeek V4.1 Flash via Cline API.
+Powered by Cline AI API.
 Answers user queries regarding game mechanics, detected bugs,
 repro sequences, invariant detectors, and code fix patches.
 """
@@ -224,7 +224,7 @@ def render_chatbot(store):
         with st.chat_message("user"):
             st.markdown(prompt_to_send)
         with st.chat_message("assistant", avatar="🤖"):
-            with st.spinner("SwarmAI is analyzing query with DeepSeek V4.1 Flash..."):
+            with st.spinner("SwarmAI is analyzing query with Cline AI..."):
                 response = ask_ai_chatbot(st.session_state["chat_messages"], store)
                 st.markdown(response)
         st.session_state["chat_messages"].append({"role": "assistant", "content": response})
@@ -237,7 +237,7 @@ def render_chatbot(store):
         with st.chat_message("user"):
             st.markdown(user_input)
         with st.chat_message("assistant", avatar="🤖"):
-            with st.spinner("SwarmAI is analyzing query with DeepSeek V4.1 Flash..."):
+            with st.spinner("SwarmAI is analyzing query with Cline AI..."):
                 response = ask_ai_chatbot(st.session_state["chat_messages"], store)
                 st.markdown(response)
         st.session_state["chat_messages"].append({"role": "assistant", "content": response})

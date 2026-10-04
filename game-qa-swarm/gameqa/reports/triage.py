@@ -1,4 +1,4 @@
-"""LLM triage: ask Claude for a title, severity and suspected cause.
+"""LLM triage: ask Cline for a title, severity and suspected cause.
 
 Two things matter for the stage:
   * Results are cached on disk, so a network failure during the demo is

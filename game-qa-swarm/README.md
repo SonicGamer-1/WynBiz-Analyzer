@@ -1,7 +1,7 @@
 # AI Game QA Swarm
 
 An AI agent swarm that plays a small grid game, finds real bugs, writes
-reproducible bug reports, triages them with Claude, and then proves a fix
+reproducible bug reports, triages them with Cline, and then proves a fix
 worked — without a human writing a single test case.
 
 Built as an 8-hour hackathon MVP. The core runtime has **zero hard
@@ -20,7 +20,7 @@ pip install -r requirements.txt
 #    from fixed, verified seeds)
 python scripts/seed_bugs.py
 
-# 2. Let the swarm loose: 60 episodes, 3 bot types, 4 detectors
+# 2. Let the swarm loose: 20 episodes per bot type (60 total), 3 bots, 4 detectors
 python -m gameqa.cli run --episodes 20 --triage
 
 # 3. Look at what it found
@@ -66,7 +66,7 @@ streamlit run dashboard/app.py
                         ▼
         ┌───────────────────────────────────┐
         │  dedupe by signature -> BugReport │  repro = (seed, actions)
-        │  + replay GIF  + Claude triage    │
+        │  + replay GIF  + Cline triage    │
         └───────────────┬───────────────────┘
                         ▼
               dashboard / cli / verify
@@ -143,14 +143,18 @@ game-qa-swarm/
 │   │   ├── schema.py        BugReport dataclass + merge + repro_text()
 │   │   ├── signature.py     stable signatures + safe filenames
 │   │   ├── store.py         artifacts/: bugs, repros, replays, runs, cache
-│   │   └── triage.py        Claude triage, disk cache, heuristic fallback
+│   │   └── triage.py        Cline triage, disk cache, heuristic fallback
 │   ├── swarm/
 │   │   ├── runner.py        run_episode() and run_script()
 │   │   └── parallel.py      ProcessPoolExecutor fan-out + serial fallback
 │   ├── replay/gif.py        re-simulate (seed, actions) -> ASCII frames -> GIF
 │   ├── repros.py            pinned, machine-verified repros for all 4 bugs
 │   └── cli.py               run / triage / list / show / replay / plant / verify
-├── dashboard/app.py         Streamlit: runs, bugs, repros, GIF, re-verify
+├── dashboard/
+│   ├── app.py         Streamlit: runs, bugs, repros, GIF, re-verify
+│   ├── arcade.py          playable Canvas arcade + bot spectator
+│   ├── chat.py            SwarmAI chatbot over the bug store
+│   └── file_analyzer.py   upload a .py game for an AI vulnerability report
 ├── scripts/
 │   ├── seed_bugs.py         pre-flight: prove all 4 planted bugs reproduce
 │   └── verify_fix.py        post-fix: prove one is gone and 3 still fire
@@ -169,7 +173,7 @@ artifacts/
 ├── repros/<signature>.txt    human-readable repro with the failing step marked
 ├── replays/<signature>.gif   re-simulated replay
 ├── runs/<run_id>.json        swarm summary (episodes, steps, wins, timing)
-└── triage_cache/<sig>.json   Claude responses, so a network blip is invisible
+└── triage_cache/<sig>.json   Cline responses, so a network blip is invisible
 ```
 
 ---
@@ -178,7 +182,7 @@ artifacts/
 
 | Command | What it does |
 |---|---|
-| `run` | Run the swarm, merge findings into reports, render GIFs. `--triage` also runs Claude. `--disable crash exploit` simulates a fix. |
+| `run` | Run the swarm, merge findings into reports, render GIFs. `--triage` also runs Cline. `--disable crash exploit` simulates a fix. |
 | `plant` | Search seeds for a verified repro of each planted bug. `--record` writes them into the store. Exits non-zero if any bug fails to reproduce. |
 | `triage` | Triage stored reports. `--force` ignores the cache, `--offline` forces the heuristic. |
 | `list` | Severity, occurrence count, fixed state and signature for every report. |
@@ -230,8 +234,8 @@ harness itself works before relying on it live.
 | # | Do | Say |
 |---|---|---|
 | 1 | `python scripts/seed_bugs.py` | "Before I demo anything, I prove the four bugs are reproducible from fixed seeds. Green means the demo cannot flake." |
-| 2 | `python -m gameqa.cli run --episodes 20 --triage` | "60 episodes across 3 bot types in a few seconds. Note the finding counts collapse into a handful of unique signatures — that's dedupe, not luck." |
-| 3 | `streamlit run dashboard/app.py` | "Severity, occurrence count, the exact repro, Claude's triage, and a replay GIF. No human wrote a test case." |
+| 2 | `python -m gameqa.cli run --episodes 20 --triage` | "20 episodes per bot type (60 total) in a few seconds. Note the finding counts collapse into a handful of unique signatures — that's dedupe, not luck." |
+| 3 | `streamlit run dashboard/app.py` | "Severity, occurrence count, the exact repro, Cline's triage, and a replay GIF. No human wrote a test case." |
 | 4 | Pick the crash, show its repro | "`seed` plus this action list replays the failure exactly. The GIF is re-simulated from it, not screen-recorded." |
 | 5 | Ask Cline to fix it from the repro alone | "It sees the repro, the traceback and the map data — never the `# BUG:` comments. The fix has to be earned." |
 | 6 | `python scripts/verify_fix.py --kind crash` | "Passing means the crash is gone AND the other three bugs are still detected. Otherwise 'fixed' could just mean I broke a detector." |
@@ -289,16 +293,20 @@ without running it is lying.
 keeps them out of the detectors' way. A damaging enemy would need its own
 detector and its own notion of "legal", which was out of scope for 8 hours.
 
-**One map, one level.** `MAP_RAW` is a single 12x10 level. The detectors are
-map-agnostic (they read `MAP_RAW` and level constants), so a second level is a
-data change rather than a detector change — but that is untested.
+**Three levels, one campaign.** `MAP_RAW` is the 12x10 `level_01` ("The
+Forgotten Crypt") that the swarm and detectors exercise. `maps.CAMPAIGN_LEVELS`
+adds `level_02` ("Inferno Bastion") and `level_03` ("Cyber Void Citadel") for
+the playable dashboard arcade, each with its own theme, difficulty, par step
+count and enemy patrol paths. The detectors are map-agnostic (they read a
+level's `raw` grid and constants), so a new level is a data change rather than
+a detector change — but only `level_01` carries the planted bugs.
 
 **Detectors are deliberately dumb.** Four hand-written rules with independent
 truth sources. No ML, no tuning, no learned invariants. That is the point: on
 stage you can read the rule that fired and agree with it in ten seconds. The
 swarm supplies coverage; the detectors supply judgement.
 
-**Triage is advisory.** Claude's title, severity and suspected cause are
+**Triage is advisory.** Cline's title, severity and suspected cause are
 recorded on the report and cached on disk. They never gate anything. The
 `verify` flow is entirely deterministic and does not call the API, so the
 success metric cannot depend on a model's opinion.

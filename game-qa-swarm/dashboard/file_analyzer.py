@@ -1,7 +1,7 @@
 """Upload & Analyze — AI Game Bug Scanner for user-submitted Python game files.
 
 Accepts a .py file upload (or 1-click sample game selection), sends the source code to
-DeepSeek V4.1 Flash, and returns a structured vulnerability report with severity,
+Cline AI, and returns a structured vulnerability report with severity,
 root cause, code-level fix suggestions, and security/logic audit.
 """
 from __future__ import annotations
@@ -50,7 +50,7 @@ ANALYZER_SYSTEM_PROMPT = (
 
 
 def analyze_game_file(source_code: str, filename: str = "uploaded_game.py") -> str:
-    """Send game source code to DeepSeek V4.1 Flash for comprehensive bug analysis."""
+    """Send game source code to Cline AI for comprehensive bug analysis."""
     key, base_url, model = get_cline_config() 
 
     if not key:
