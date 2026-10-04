@@ -1,0 +1,18 @@
+# Core runtime has ZERO hard dependencies -- the game, agents, detectors,
+# reports, swarm and CLI all run on the Python 3.9+ standard library.
+# Everything below is optional and degrades gracefully when missing.
+
+# Replay GIF rendering. Without it, replays fall back to an ASCII frame view
+# in the CLI and the dashboard, and the swarm still works.
+pillow>=10.0.0
+
+# Dashboard. `streamlit run dashboard/app.py`
+streamlit>=1.32.0
+
+# Claude triage. Without a key (or without this package) triage falls back to
+# a deterministic heuristic, so the demo never stalls on the network.
+anthropic>=0.34.0
+
+# Tests. The test files also run standalone with no pytest at all:
+#   python tests/test_planted_bugs.py
+pytest>=7.4.0
